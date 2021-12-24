@@ -47,7 +47,9 @@ from renko import Renko
 
 ...
 
-    # If you use it live in your strategies, pass the current price to check_new_price() function. If new price change is big enough to create a new birck or bricks, the bricks list will be updated accordingly.
+    # If you use it live in your strategies, pass the current price to check_new_price() function. 
+    # If new price change is big enough to create a new birck or bricks, 
+    # the bricks list will be updated accordingly.
     rnk = Renko(1000, close)
     rnk.create_renko()
 
