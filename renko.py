@@ -11,6 +11,8 @@ class Renko:
 
 
     def create_renko(self):
+        """Creating renko bricks using the provided price data
+        """
         for i, d in enumerate(self.data):
             if i == 0:
                 self.bricks.append({"type":"first", "open":float(d), "close":float(d)})
@@ -51,6 +53,15 @@ class Renko:
 
 
     def add_bricks(self, type, count, brick_size):
+        """Adds brick(s) to the bricks list
+
+        :param type: type of brick (up or down)
+        :type type: string
+        :param count: number of bricks to add
+        :type count: int
+        :param brick_size: brick size
+        :type brick_size: float
+        """
         for i in range(count):
             if type == "up":
                 if self.bricks[-1]["type"] == "up" or self.bricks[-1]["type"] == "first":
@@ -65,6 +76,11 @@ class Renko:
 
 
     def check_new_price(self, price):
+        """Checks new price. If price change is big enough to create a new birck or bricks, the bricks list will be updated accordingly.
+
+        :param price: last price value
+        :type price: float
+        """
         if self.bricks[-1]["type"] == "up":
             if price > self.bricks[-1]["close"]:
                 delta = price - self.bricks[-1]["close"]
