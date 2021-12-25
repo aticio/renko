@@ -2,6 +2,8 @@
 
 Renko chart creator.
 
+[![Publish Python 🐍 distributions 📦 to PyPI and TestPyPI](https://github.com/aticio/renko/actions/workflows/publish-to-test-pypi.yml/badge.svg?branch=main)](https://github.com/aticio/renko/actions/workflows/publish-to-test-pypi.yml)
+
 ## Example Usage
 ```python
 from renko import Renko
