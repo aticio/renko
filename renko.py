@@ -114,3 +114,16 @@ class Renko:
                 fcount = math.floor(delta / self.brick_size)
                 if fcount != 0:
                     self.add_bricks("down", fcount, self.brick_size)
+
+
+    def add_single_custom_brick(self, type, open, close):
+        """Mainly used for adding the first brick in live strategies.
+
+        :param type: type of brick, up or down
+        :type type: string
+        :param open: open price of the brick
+        :type open: float
+        :param close: close price of the brick
+        :type close: float
+        """
+        self.bricks.append({"type": type, "open": open, "close": close})
