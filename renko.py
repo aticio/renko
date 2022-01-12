@@ -8,6 +8,7 @@ class Renko:
         self.brick_size = brick_size
         self.data = data
         self.bricks = []
+        self.wick = 0
 
 
     def create_renko(self):
@@ -15,14 +16,18 @@ class Renko:
         """
         for i, d in enumerate(self.data):
             if i == 0:
-                self.bricks.append({"type":"first", "open":float(d), "close":float(d)})
+                self.bricks.append({"type":"first", "open":float(d), "close":float(d), "low":float(d), "high":float(d)})
             else:
                 if self.bricks[-1]["type"] == "up":
                     if d > self.bricks[-1]["close"]:
                         delta = d - self.bricks[-1]["close"]
                         fcount = math.floor(delta / self.brick_size)
                         if fcount != 0:
+                            # low - high values will be added according to self.wick
                             self.add_bricks("up", fcount, self.brick_size)
+                        else:
+                            if delta > self.brick_size:
+                                self.wick = self.bricks[-1]["close"] + self.brick_size
                     elif d < self.bricks[-1]["open"]:
                         delta = self.bricks[-1]["open"] - d
                         fcount = math.floor(delta / self.brick_size)
