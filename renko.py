@@ -23,16 +23,18 @@ class Renko:
                         delta = d - self.bricks[-1]["close"]
                         fcount = math.floor(delta / self.brick_size)
                         if fcount != 0:
-                            # low - high values will be added according to self.wick
                             self.add_bricks("up", fcount, self.brick_size)
-                        else:
-                            if delta > self.brick_size:
-                                self.wick = self.bricks[-1]["close"] + self.brick_size
                     elif d < self.bricks[-1]["open"]:
                         delta = self.bricks[-1]["open"] - d
                         fcount = math.floor(delta / self.brick_size)
                         if fcount != 0:
-                            self.add_bricks("down", fcount, self.brick_size) 
+                            if self.wick != 0:
+                                self.bricks[-1]["low"] = self.wick
+                            self.add_bricks("down", fcount, self.brick_size)
+                            self.wick = 0
+                        else:
+                            if delta > self.brick_size:
+                                self.wick = self.bricks[-1]["open"] - delta
                 elif self.bricks[-1]["type"] == "down":
                     if d < self.bricks[-1]["close"]:
                         delta = self.bricks[-1]["close"] - d
@@ -43,7 +45,13 @@ class Renko:
                         delta = d - self.bricks[-1]["open"]
                         fcount = math.floor(delta / self.brick_size)
                         if fcount != 0:
+                            if self.wick != 0:
+                                self.bricks[-1]["high"] = self.wick
                             self.add_bricks("up", fcount, self.brick_size)
+                            self.wick = 0
+                        else:
+                            if delta > self.brick_size:
+                                self.wick = self.bricks[-1]["open"] + delta
                 else:
                     if d > self.bricks[-1]["close"]:
                         delta = d - self.bricks[-1]["close"]

@@ -3,7 +3,7 @@ import requests
 
 BINANCE_URL = "https://api.binance.com/api/v3/klines"
 SYMBOL = "BTCUSDT"
-INTERVAL = "1h"
+INTERVAL = "1d"
 PARAMS = {"symbol": SYMBOL, "interval": INTERVAL}
 
 
@@ -12,7 +12,8 @@ def test_createrenko():
     data = response.json()
     close = [float(c[4]) for c in data]
 
-    rnk = Renko(1000, close)
+    rnk = Renko(748, close)
     rnk.create_renko()
 
-    print(rnk.bricks)
+    for b in rnk.bricks:
+        print(b)
