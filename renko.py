@@ -17,7 +17,8 @@ class Renko:
         """
         for i, d in enumerate(self.data):
             if i == 0:
-                self.bricks.append({"type":"first", "open":float(d), "close":float(d)})
+                if len(self.bricks) == 0:
+                    self.bricks.append({"type":"first", "open":float(d), "close":float(d)})
             else:
                 if self.bricks[-1]["type"] == "up":
                     if d > self.bricks[-1]["close"]:
@@ -28,7 +29,8 @@ class Renko:
                                 self.add_bricks("up", fcount, self.brick_size)
                             else:
                                 self.add_bricks("up", fcount, self.brick_size, self.low_wick)
-                                self.low_wick = 0
+                            self.low_wick = 0
+                            self.high_wick = 0
                         else:
                             if d > self.high_wick:
                                 self.high_wick = d
@@ -40,7 +42,8 @@ class Renko:
                                 self.add_bricks("down", fcount, self.brick_size)
                             else:
                                 self.add_bricks("down", fcount, self.brick_size, self.high_wick)
-                                self.high_wick = 0
+                            self.high_wick = 0
+                            self.low_wick = 0
                         else:
                             if self.low_wick == 0 or d < self.low_wick:
                                 self.low_wick = d
@@ -54,7 +57,8 @@ class Renko:
                                 self.add_bricks("down", fcount, self.brick_size)
                             else:
                                 self.add_bricks("down", fcount, self.brick_size, self.high_wick)
-                                self.high_wick = 0
+                            self.high_wick = 0
+                            self.low_wick = 0
                         else:
                             if self.low_wick == 0 or d < self.low_wick:
                                 self.low_wick = d
@@ -66,7 +70,8 @@ class Renko:
                                 self.add_bricks("up", fcount, self.brick_size)
                             else:
                                 self.add_bricks("up", fcount, self.brick_size, self.low_wick)
-                                self.low_wick = 0
+                            self.low_wick = 0
+                            self.high_wick = 0
                         else:
                             if d > self.high_wick:
                                 self.high_wick = d
@@ -96,37 +101,37 @@ class Renko:
             if type == "up":
                 if self.bricks[-1]["type"] == "up" or self.bricks[-1]["type"] == "first":
                     if wick == 0:
-                        self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": self.bricks[-1]["close"] + brick_size})
+                        self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] + brick_size, 2)})
                     else:
                         if i == 0:
-                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": self.bricks[-1]["close"] + brick_size, "low": wick})
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] + brick_size, 2), "low": wick})
                         else:
-                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": self.bricks[-1]["close"] + brick_size})
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] + brick_size, 2)})
                 elif self.bricks[-1]["type"] == "down":
                     if wick == 0:
-                        self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": self.bricks[-1]["open"] + brick_size})
+                        self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] + brick_size, 2)})
                     else:
                         if i == 0:
-                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": self.bricks[-1]["open"] + brick_size, "low": wick})
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] + brick_size, 2), "low": wick})
                         else:
-                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": self.bricks[-1]["open"] + brick_size})
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] + brick_size, 2)})
             elif type == "down":
                 if self.bricks[-1]["type"] == "up":
                     if wick == 0:
-                        self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": self.bricks[-1]["open"] - brick_size})
+                        self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] - brick_size, 2)})
                     else:
                         if i == 0:
-                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": self.bricks[-1]["open"] - brick_size, "high": wick})
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] - brick_size, 2), "high": wick})
                         else:
-                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": self.bricks[-1]["open"] - brick_size})
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] - brick_size, 2)})
                 elif self.bricks[-1]["type"] == "down" or self.bricks[-1]["type"] == "first":
                     if wick == 0:
-                        self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": self.bricks[-1]["close"] - brick_size})
+                        self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] - brick_size, 2)})
                     else:
                         if i == 0:
-                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": self.bricks[-1]["close"] - brick_size, "high": wick})
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] - brick_size, 2), "high": wick})
                         else:
-                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": self.bricks[-1]["close"] - brick_size})
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] - brick_size, 2)})
 
 
     def check_new_price(self, price):
