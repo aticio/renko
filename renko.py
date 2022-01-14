@@ -8,6 +8,8 @@ class Renko:
         self.brick_size = brick_size
         self.data = data
         self.bricks = []
+        self.low_wick = 0
+        self.high_wick = 0
 
 
     def create_renko(self):
@@ -15,30 +17,64 @@ class Renko:
         """
         for i, d in enumerate(self.data):
             if i == 0:
-                self.bricks.append({"type":"first", "open":float(d), "close":float(d)})
+                if len(self.bricks) == 0:
+                    self.bricks.append({"type":"first", "open":float(d), "close":float(d)})
             else:
                 if self.bricks[-1]["type"] == "up":
                     if d > self.bricks[-1]["close"]:
                         delta = d - self.bricks[-1]["close"]
                         fcount = math.floor(delta / self.brick_size)
                         if fcount != 0:
-                            self.add_bricks("up", fcount, self.brick_size)
+                            if self.low_wick == 0:
+                                self.add_bricks("up", fcount, self.brick_size)
+                            else:
+                                self.add_bricks("up", fcount, self.brick_size, self.low_wick)
+                            self.low_wick = 0
+                            self.high_wick = 0
+                        else:
+                            if d > self.high_wick:
+                                self.high_wick = d
                     elif d < self.bricks[-1]["open"]:
                         delta = self.bricks[-1]["open"] - d
                         fcount = math.floor(delta / self.brick_size)
                         if fcount != 0:
-                            self.add_bricks("down", fcount, self.brick_size) 
+                            if self.high_wick == 0:
+                                self.add_bricks("down", fcount, self.brick_size)
+                            else:
+                                self.add_bricks("down", fcount, self.brick_size, self.high_wick)
+                            self.high_wick = 0
+                            self.low_wick = 0
+                        else:
+                            if self.low_wick == 0 or d < self.low_wick:
+                                self.low_wick = d
+
                 elif self.bricks[-1]["type"] == "down":
                     if d < self.bricks[-1]["close"]:
                         delta = self.bricks[-1]["close"] - d
                         fcount = math.floor(delta / self.brick_size)
                         if fcount != 0:
-                            self.add_bricks("down", fcount, self.brick_size)
+                            if self.high_wick == 0:
+                                self.add_bricks("down", fcount, self.brick_size)
+                            else:
+                                self.add_bricks("down", fcount, self.brick_size, self.high_wick)
+                            self.high_wick = 0
+                            self.low_wick = 0
+                        else:
+                            if self.low_wick == 0 or d < self.low_wick:
+                                self.low_wick = d
                     elif d > self.bricks[-1]["open"]:
                         delta = d - self.bricks[-1]["open"]
                         fcount = math.floor(delta / self.brick_size)
                         if fcount != 0:
-                            self.add_bricks("up", fcount, self.brick_size)
+                            if self.low_wick == 0:
+                                self.add_bricks("up", fcount, self.brick_size)
+                            else:
+                                self.add_bricks("up", fcount, self.brick_size, self.low_wick)
+                            self.low_wick = 0
+                            self.high_wick = 0
+                        else:
+                            if d > self.high_wick:
+                                self.high_wick = d
                 else:
                     if d > self.bricks[-1]["close"]:
                         delta = d - self.bricks[-1]["close"]
@@ -52,9 +88,8 @@ class Renko:
                             self.add_bricks("down", fcount, self.brick_size)
 
 
-    def add_bricks(self, type, count, brick_size):
+    def add_bricks(self, type, count, brick_size, wick=0):
         """Adds brick(s) to the bricks list
-
         :param type: type of brick (up or down)
         :type type: string
         :param count: number of bricks to add
@@ -65,19 +100,42 @@ class Renko:
         for i in range(count):
             if type == "up":
                 if self.bricks[-1]["type"] == "up" or self.bricks[-1]["type"] == "first":
-                    self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": self.bricks[-1]["close"] + brick_size})
+                    if wick == 0:
+                        self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] + brick_size, 2)})
+                    else:
+                        if i == 0:
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] + brick_size, 2), "low": wick})
+                        else:
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] + brick_size, 2)})
                 elif self.bricks[-1]["type"] == "down":
-                    self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": self.bricks[-1]["open"] + brick_size})
+                    if wick == 0:
+                        self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] + brick_size, 2)})
+                    else:
+                        if i == 0:
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] + brick_size, 2), "low": wick})
+                        else:
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] + brick_size, 2)})
             elif type == "down":
                 if self.bricks[-1]["type"] == "up":
-                    self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": self.bricks[-1]["open"] - brick_size})
+                    if wick == 0:
+                        self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] - brick_size, 2)})
+                    else:
+                        if i == 0:
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] - brick_size, 2), "high": wick})
+                        else:
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["open"], "close": round(self.bricks[-1]["open"] - brick_size, 2)})
                 elif self.bricks[-1]["type"] == "down" or self.bricks[-1]["type"] == "first":
-                    self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": self.bricks[-1]["close"] - brick_size})
+                    if wick == 0:
+                        self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] - brick_size, 2)})
+                    else:
+                        if i == 0:
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] - brick_size, 2), "high": wick})
+                        else:
+                            self.bricks.append({"type": type, "open": self.bricks[-1]["close"], "close": round(self.bricks[-1]["close"] - brick_size, 2)})
 
 
     def check_new_price(self, price):
         """Checks new price. If price change is big enough to create a new birck or bricks, the bricks list will be updated accordingly.
-
         :param price: last price value
         :type price: float
         """
@@ -118,7 +176,6 @@ class Renko:
 
     def add_single_custom_brick(self, type, open, close):
         """Mainly used for adding the first brick in live strategies.
-
         :param type: type of brick, up or down
         :type type: string
         :param open: open price of the brick
