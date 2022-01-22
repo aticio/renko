@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="renko",
-    version="0.0.11",
+    version="0.0.12",
     description="Renko chart creator.",
     py_modules=["renko"],
     classifiers=[
