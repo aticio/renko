@@ -222,7 +222,7 @@ class Renko:
         ax.set_axisbelow(True)
         ax.get_xaxis().set_visible(False)
 
-        ticks = np.arange(0, y_max + (y_max * 0.1), 1000)
+        ticks = np.arange(0, y_max + (y_max * 0.1), self.brick_size)
         plt.yticks(ticks)
-        plt.grid(linestyle='--', color="#ccd8c0", zorder=0.99)
+        plt.grid(linestyle='--', color="#ccd8c0")
         plt.show()
