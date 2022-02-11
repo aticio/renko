@@ -1,5 +1,7 @@
 # flake8: noqa
 import math
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 class Renko:
     """Renko initialization class
@@ -184,3 +186,39 @@ class Renko:
         :type close: float
         """
         self.bricks.append({"type": type, "open": open, "close": close})
+
+
+    def draw_chart(self):
+        brick_width = self.brick_size / 2
+        y_max = 0
+        fig, ax = plt.subplots()
+        ax.get_xaxis().set_visible(False)
+
+        count = 1
+        for b in self.bricks:
+            y = 0
+            color = ""
+            if b["type"] == "up":
+                y = b["open"]
+                color = "green"
+            elif b["type"] == "down":
+                y = b["close"]
+                color = "red"
+            else:
+                color = "gray"
+                y = b["close"]
+
+            if y > y_max:
+                y_max = y
+
+            r = Rectangle((count * brick_width, y), brick_width, self.brick_size)
+            r.set_color(color)
+
+            ax.add_patch(r)
+            count = count + 1
+
+        ax.set_xlim(0, count * brick_width)
+        ax.set_ylim(0, y_max + (y_max * 0.1))
+
+        plt.grid()
+        plt.show()
