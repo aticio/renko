@@ -2,6 +2,7 @@
 import math
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+import numpy as np
 
 class Renko:
     """Renko initialization class
@@ -192,7 +193,6 @@ class Renko:
         brick_width = self.brick_size / 2
         y_max = 0
         fig, ax = plt.subplots()
-        ax.get_xaxis().set_visible(False)
 
         count = 1
         for b in self.bricks:
@@ -219,6 +219,10 @@ class Renko:
 
         ax.set_xlim(0, count * brick_width)
         ax.set_ylim(0, y_max + (y_max * 0.1))
+        ax.set_axisbelow(True)
+        ax.get_xaxis().set_visible(False)
 
-        plt.grid()
+        ticks = np.arange(0, y_max + (y_max * 0.1), 1000)
+        plt.yticks(ticks)
+        plt.grid(linestyle='--', color="#ccd8c0", zorder=0.99)
         plt.show()
