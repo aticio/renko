@@ -34,13 +34,6 @@ from renko import Renko
 	{'type': 'up', 'open': 18564.87, 'close': 19312.87, 'low': 17139.52}
 	{'type': 'up', 'open': 19312.87, 'close': 20060.87, 'low': 18036.53}
 	{'type': 'up', 'open': 20060.87, 'close': 20808.87}
-	{'type': 'up', 'open': 20808.87, 'close': 21556.87}
-	{'type': 'up', 'open': 21556.87, 'close': 22304.87}
-	{'type': 'up', 'open': 22304.87, 'close': 23052.87}
-	{'type': 'up', 'open': 23052.87, 'close': 23800.87}
-	{'type': 'up', 'open': 23800.87, 'close': 24548.87, 'low': 22719.71}
-	{'type': 'up', 'open': 24548.87, 'close': 25296.87}
-	{'type': 'up', 'open': 25296.87, 'close': 26044.87}
 
 	...
 	...
@@ -64,13 +57,6 @@ from renko import Renko
 	{'type': 'down', 'open': 42500.87, 'close': 41752.87}
 	{'type': 'down', 'open': 41752.87, 'close': 41004.87}
 	{'type': 'down', 'open': 41004.87, 'close': 40256.87}
-	{'type': 'down', 'open': 40256.87, 'close': 39508.87}
-	{'type': 'down', 'open': 39508.87, 'close': 38760.87}
-	{'type': 'down', 'open': 38760.87, 'close': 38012.87}
-	{'type': 'down', 'open': 38012.87, 'close': 37264.87}
-	{'type': 'down', 'open': 37264.87, 'close': 36516.87}
-	{'type': 'down', 'open': 36516.87, 'close': 35768.87}
-	{'type': 'down', 'open': 35768.87, 'close': 35020.87}
 ]
 ```
 
@@ -95,6 +81,23 @@ from renko import Renko
     print(rnk.bricks)
 
 ```
+
+```python
+from renko import Renko
+
+...
+    # You can plot the bricks as follows.
+    rnk = Renko(1000, close)
+    rnk.create_renko()
+	rnk.draw_chart()
+...
+
+```
+
+-----------------------
+
+
+![renko_figure](figure.png)
 
 ## Installation
 
