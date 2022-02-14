@@ -94,8 +94,6 @@ from renko import Renko
 
 ```
 
------------------------
-
 
 ![renko_figure](figure.png)
 
