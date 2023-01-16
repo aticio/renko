@@ -2,7 +2,7 @@ from renko import Renko
 import requests
 
 BINANCE_URL = "https://api.binance.com/api/v3/klines"
-SYMBOL = "BTCUSDT"
+SYMBOL = "LINKDOWNUSDT"
 INTERVAL = "1d"
 PARAMS = {"symbol": SYMBOL, "interval": INTERVAL}
 
